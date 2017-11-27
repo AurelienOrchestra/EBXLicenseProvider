@@ -1,0 +1,24 @@
+[
+    {
+        "code": "BOT_ERR",
+        "message": "Sorry, something went wrong with the license provider, please contact the support or try later"
+    },{
+        "code": "BOT_001",
+        "message": "here is your EBX license"
+    },{
+        "code": "BOT_002",
+        "message": "you want an EBX license, here is one"
+    },{
+        "code": "BOT_003",
+        "message": "Key"
+    },{
+        "code": "BOT_004",
+        "message": "Generated {0} days ago"
+    },{
+        "code": "BOT_005",
+        "message": "Expiring in {0} days"
+    },{
+        "code": "BOT_CONV",
+        "message": "Sorry, I can't have a conversation, I'm just a stupid bot providing license if you ask one"
+    }
+]

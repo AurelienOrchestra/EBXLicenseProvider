@@ -1,0 +1,24 @@
+[
+    {
+        "code": "BOT_ERR",
+        "message": "Désolé, il y a eu une erreur quelque part, contacte le support ou essaie plus tard"
+    },{
+        "code": "BOT_001",
+        "message": "voici une license EBX"
+    },{
+        "code": "BOT_002",
+        "message": "tu veux une licence EBX, en voilà une"
+    },{
+        "code": "BOT_003",
+        "message": "Clé"
+    },{
+        "code": "BOT_004",
+        "message": "Généré il y a {0} jours"
+    },{
+        "code": "BOT_005",
+        "message": "Expire dans {0} jours"
+    },{
+        "code": "BOT_CONV",
+        "message": "Désolé, je ne peux tenir une discussion, je ne suis qu'un stupide bot qui fournit des licence EBX quand on m'en demande une"
+    }
+]
