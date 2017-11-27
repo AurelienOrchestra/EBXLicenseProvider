@@ -1,0 +1,39 @@
+{
+  "name": "ebxlicenseprovider",
+  "version": "1.0.0",
+  "description": "License provider for Orchestra Networks internal usage",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "engines": {
+    "node": "9.1.0",
+    "npm": "5.5.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AurelienOrchestra/EBXLicenseProvider.git"
+  },
+  "author": "Aurélien Ticot <aurelien.ticot@orchestranetworks.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/AurelienOrchestra/EBXLicenseProvider/issues"
+  },
+  "homepage": "https://github.com/AurelienOrchestra/EBXLicenseProvider#readme",
+  "dependencies": {
+    "body-parser": "^1.18.2",
+    "botkit": "^0.6.6",
+    "chrono-node": "^1.3.5",
+    "express": "^4.16.2",
+    "franc-min": "^3.1.1",
+    "htmlparser2": "^3.9.2",
+    "lodash": "^4.17.4",
+    "messages-factory": "^1.0.2",
+    "method-override": "^2.3.10",
+    "moment": "^2.19.2",
+    "request": "^2.83.0",
+    "request-promise": "^4.2.2",
+    "yargs": "^10.0.3"
+  }
+}
