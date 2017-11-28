@@ -1,3 +1,4 @@
+// Dependencies
 const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
@@ -50,13 +51,17 @@ module.exports = (EBXLicensesProvider, port) => {
 
     // Route /licenses/:expiration try to return the license correpsonding to the parameter.
     router.route('/licenses/:expiration').get((req, res) => {
+
+        // Get the expiration from the parameters
         const expirationParam = req.params.expiration;
 
         let expiration;
 
+        // Analyze the expiration as a Date or an Integer
         const expirationDate = moment(expirationParam, 'YYYY-MM-DD', true);
         const expirationInt = _.toInteger(expirationParam);
 
+        // Check the expiration parameter is valid
         if (expirationDate.isValid()) {
             expiration = expirationDate.toDate();
         } else if (_.isFinite(expirationInt)) {
@@ -65,6 +70,7 @@ module.exports = (EBXLicensesProvider, port) => {
             expiration = expirationParam;
         }
 
+        // Get the corresponding license
         EBXLicensesProvider.getLicense(expiration)
             .then((license) => {
                 res.json(license);
