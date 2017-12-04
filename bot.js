@@ -91,8 +91,9 @@ const extractDate = (message = {}) => {
     }
 
     nlpLogger.info({
-        'text': text,
-        'date' : returnedDate
+        today: new Date(),
+        text: text,
+        date: returnedDate
     });
 
     return returnedDate;
@@ -161,10 +162,10 @@ module.exports = (EBXLicensesProvider, token) => {
 
         if (date) {
             message.expiration = date;
-            botLogger.log('debug', `Extracted date: ${date} from ${message.text}`);
+            botLogger.log('debug', `Extracted date: "${date}" from "${message.text}"`);
         } else {
             message.expiration = null;
-            botLogger.log('debug', `No extracted date from ${message.text}`);
+            botLogger.log('debug', `No extracted date from "${message.text}"`);
         }
 
         next();
@@ -188,7 +189,7 @@ module.exports = (EBXLicensesProvider, token) => {
 
         // Requesting license provider for a license
         botLogger.log('verbose', `Requesting license provider for a license`);
-        botLogger.log('debug', `Requesting license expiration ${message.expiration}`);
+        botLogger.log('debug', `Requesting license with expiration "${message.expiration}"`);
 
         EBXLicensesProvider.getLicense(message.expiration).then((license) => {
 
@@ -201,7 +202,8 @@ module.exports = (EBXLicensesProvider, token) => {
         }).catch((err) => {
 
             // TODO handle error
-            botLogger.log('error', 'Provider returned an error on getLicense(expiration)', err);
+            botLogger.error('Provider return an error on getLicense(expiration)');
+            botLogger.error(err);
 
             botLogger.log('verbose', 'Replying with an error message');
             bot.reply(message, messages('BOT_ERR', language));
@@ -226,7 +228,7 @@ module.exports = (EBXLicensesProvider, token) => {
 
         // Requesting license provider for a license
         botLogger.log('verbose', `Requesting license provider for a license`);
-        botLogger.log('debug', `Requesting license expiration ${message.expiration}`);
+        botLogger.log('debug', `Requesting license with expiration "${message.expiration}"`);
 
         EBXLicensesProvider.getLicense(message.expiration).then((license) => {
 
@@ -239,7 +241,8 @@ module.exports = (EBXLicensesProvider, token) => {
         }).catch((err) => {
 
             // TODO handle error
-            botLogger.log('error', 'Provider return an error on getLicense(expiration)', err);
+            botLogger.error('Provider return an error on getLicense(expiration)');
+            botLogger.error(err);
 
             botLogger.log('verbose', 'Replying with an error message');
             bot.reply(message, messages('BOT_ERR', language));
@@ -264,7 +267,7 @@ module.exports = (EBXLicensesProvider, token) => {
 
         // Requesting license provider for a license
         botLogger.log('verbose', `Requesting license provider for a license`);
-        botLogger.log('debug', `Requesting license expiration ${message.expiration}`);
+        botLogger.log('debug', `Requesting license with expiration "${message.expiration}"`);
 
         EBXLicensesProvider.getLicense(message.expiration).then((license) => {
 
@@ -277,7 +280,8 @@ module.exports = (EBXLicensesProvider, token) => {
         }).catch((err) => {
 
             // TODO handle error
-            botLogger.log('error', 'Provider return an error on getLicense(expiration)', err);
+            botLogger.error('Provider return an error on getLicense(expiration)');
+            botLogger.error(err);
 
             botLogger.log('verbose', 'Replying with an error message');
             bot.reply(message, messages('BOT_ERR', language));

@@ -178,8 +178,8 @@ module.exports = (licensePageURL) => {
 
                     // Create a new License instance
                     logger.log('verbose', 'Creating a new license with following inputs', {
-                        key,
-                        date
+                        key: key,
+                        date: date.toDate()
                     });
                     const license = new License(key, date);
                     logger.log('verbose', 'License created', license);

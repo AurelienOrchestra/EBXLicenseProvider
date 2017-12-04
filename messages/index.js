@@ -36,7 +36,7 @@ module.exports = (code, language = 'eng', ...values) => {
             message = messagesEng[code](values);
     }
 
-    logger.log('debug', 'Message factory returning message', { lmessage });
+    logger.log('debug', 'Message factory returning message', { message });
 
     return message;
 };

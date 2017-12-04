@@ -3,8 +3,8 @@ const _ = require('lodash');
 const args = require('yargs').argv;
 
 // Getting debug and verbose argument from command line
-const debug = args.debug;
-const verbose = args.verbose;
+const debug = args.debug || false;
+const verbose = args.verbose || false;
 
 // Set up loggers
 require('./logger')(debug, verbose);
