@@ -171,11 +171,11 @@ module.exports = (debug, verbose) => {
             new (winston.transports.File)({
                 label: nlpLabel,
                 name: nlpLabel,
-                filename: `./log/${nlpFilename}.log`,
+                filename: `./log/${nlpFilename}.json`,
                 level: level,
                 prettyPrint: true,
                 depth: 0,
-                json: false
+                json: true
             })
         ]
     });
