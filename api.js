@@ -27,6 +27,9 @@ module.exports = (EBXLicensesProvider, port) => {
     // Define the routes of the REST API
 
     const router = express.Router();
+    router.get('/', (req, res) => {
+        res.json({message: 'Welcome to the EBX License provider REST API!'});
+    });
 
     // Route /licenses return all valid licenses.
     router.route('/licenses').get((req, res) => {
