@@ -34,7 +34,7 @@ class License {
      */
     constructor(key, date) {
 
-        // TODO check parameters.
+        // TODO check parameters
 
         /**
          * @type {String}
@@ -137,7 +137,6 @@ module.exports = (licensePageURL) => {
 
             }).catch(err => {
                 logger.error('Error raised when HTTP requesting the license page', { url : licensePageURL });
-                logger.error(err);
                 reject(err);
             });
 
@@ -162,7 +161,6 @@ module.exports = (licensePageURL) => {
         const handler = new htmlparser.DomHandler((err, dom) => {
             if (err) {
                 logger.error('Error raised while handling the DOM while parsing the content of the license page');
-                logger.error(err);
             }
             else  {
 
@@ -234,7 +232,6 @@ module.exports = (licensePageURL) => {
             }).catch((err) => {
 
                 logger.error('Something went wrong while extracting the data from the license page');
-                logger.error(err);
                 reject(err);
 
             });
@@ -260,16 +257,19 @@ module.exports = (licensePageURL) => {
             if (moment().isSame(cache.date, 'day')) {
                 // If yes, return the cache data in the Promise
                 logger.log('verbose', 'Cache is up-to-date, directly using its data');
+                logger.info('Providing the list of licenses');
                 resolve(cache.data);
             } else {
                 // If not, update the cache, then return the cache data in the Promise
                 logger.info('Cache not up-to-date');
                 update().then(() => {
 
+                    logger.info('Providing the list of licenses');
                     resolve(cache.data);
 
                 }).catch((err) => {
 
+                    logger.error(`Can't provide the list of licenses`);
                     logger.error('Something went wrong while updating the cache');
                     logger.error(err);
                     reject(err);
@@ -340,20 +340,23 @@ module.exports = (licensePageURL) => {
                         licenseNotFoundError = new Error(`License expiring in ${expiration} days not found.`);
                     }
 
+                    // TODO handle error
                     logger.warn('License not found', licenseNotFoundError);
                     reject(licenseNotFoundError);
 
                 } else {
 
                     // If license found, return the license
-                    logger.info('Return license', license);
+                    logger.info('Providing the license', license);
                     resolve(license);
                 }
 
             }).catch((err) => {
 
+                logger.error(`Can't provide the license`);
                 logger.error('Something went wrong while getting the list of licenses');
-                logger.error(err);
+
+                // TODO handle error, reject with custom ProviderError
                 reject(err);
 
             });
@@ -372,6 +375,8 @@ module.exports = (licensePageURL) => {
         logger.info('Getting the latest license');
         return getLicense();
     }
+
+    logger.log('verbose', 'Provider configured');
 
     // Export the public functions
     return {
