@@ -3,10 +3,16 @@ const htmlparser = require('htmlparser2');
 const moment = require('moment');
 const _ = require('lodash');
 
+// Get the logger
+const logger = require('winston').loggers.get('Provider');
+
 // Constants
+
 const nbDaysLicenseExpiration = 60;
+logger.log('debug', `Define the default expiration of the trial license to ${nbDaysLicenseExpiration}`);
 
 // Define a local cache
+logger.log('debug', 'Define an empty cache');
 const cache = {
     date: null,
     data: null
@@ -28,7 +34,7 @@ class License {
      */
     constructor(key, date) {
 
-        // TODO check parameters.
+        // TODO check parameters
 
         /**
          * @type {String}
@@ -114,19 +120,23 @@ module.exports = (licensePageURL) => {
      */
     const extract = () => {
 
+        logger.info('Extracting licenses information from the license page');
+
         return new Promise((resolve, reject) => {
 
             const request = require('request-promise');
 
+            logger.log('verbose', 'HTTP requesting the license page', { url : licensePageURL });
             // HTTP request of the page
             request(licensePageURL).then(content => {
 
+                logger.log('verbose', 'Getting the content of the license page');
                 // Parse the content to get the licenses
                 const licenses = parse(content);
                 resolve(licenses);
 
             }).catch(err => {
-                console.error(err);
+                logger.error('Error raised when HTTP requesting the license page', { url : licensePageURL });
                 reject(err);
             });
 
@@ -143,12 +153,14 @@ module.exports = (licensePageURL) => {
      */
     const parse = (content) => {
 
+        logger.info('Parsing the content of the license page');
+
         let licenses = [];
 
         // The parser will use this function to handle the DOM
-        const handler = new htmlparser.DomHandler((err, dom) => { // TODO Handle errors
+        const handler = new htmlparser.DomHandler((err, dom) => {
             if (err) {
-                console.error(err);
+                logger.error('Error raised while handling the DOM while parsing the content of the license page');
             }
             else  {
 
@@ -165,7 +177,14 @@ module.exports = (licensePageURL) => {
                     let date = moment(_.trim(item.prev.data), 'YYYY-MM-DD');
 
                     // Create a new License instance
-                    return new License(key, date);;
+                    logger.log('verbose', 'Creating a new license with following inputs', {
+                        key: key,
+                        date: date.toDate()
+                    });
+                    const license = new License(key, date);
+                    logger.log('verbose', 'License created', license);
+
+                    return license;
                 });
             }
         }, {
@@ -183,6 +202,8 @@ module.exports = (licensePageURL) => {
         licenses = _.sortBy(licenses, 'generationDate');
         licenses = _.reverse(licenses);
 
+        logger.log('verbose', 'Returning the list of licenses');
+
         return licenses;
     }
 
@@ -194,6 +215,8 @@ module.exports = (licensePageURL) => {
      */
     const update = () => {
 
+        logger.info('Updating the cache');
+
         return new Promise((resolve, reject) => {
 
             extract().then((licenses) => {
@@ -202,10 +225,15 @@ module.exports = (licensePageURL) => {
                 cache.date = new Date();
                 cache.data = licenses;
 
+                logger.info('Cache updated');
+
                 resolve();
 
             }).catch((err) => {
+
+                logger.error('Something went wrong while extracting the data from the license page');
                 reject(err);
+
             });
 
         });
@@ -221,18 +249,31 @@ module.exports = (licensePageURL) => {
      */
     const getLicenses = () => {
 
+        logger.info('Getting the list of licenses');
+
         return new Promise((resolve, reject) => {
 
             // Check if the cache is updated, ie. same day as today
             if (moment().isSame(cache.date, 'day')) {
                 // If yes, return the cache data in the Promise
+                logger.log('verbose', 'Cache is up-to-date, directly using its data');
+                logger.info('Providing the list of licenses');
                 resolve(cache.data);
             } else {
                 // If not, update the cache, then return the cache data in the Promise
+                logger.info('Cache not up-to-date');
                 update().then(() => {
+
+                    logger.info('Providing the list of licenses');
                     resolve(cache.data);
+
                 }).catch((err) => {
+
+                    logger.error(`Can't provide the list of licenses`);
+                    logger.error('Something went wrong while updating the cache');
+                    logger.error(err);
                     reject(err);
+
                 });
             }
 
@@ -249,27 +290,39 @@ module.exports = (licensePageURL) => {
      */
     const getLicense = (expiration) => {
 
+        logger.info(`Getting the license with expiration ${expiration}`);
+
         return new Promise((resolve, reject) => {
 
             // Get all licenses via the getLicenses function (avoid dealing with cache update)
             getLicenses().then((licenses) => {
+
+                logger.log('verbose', 'Retreiving the list of licenses');
+
                 let license = null;
 
                 if(_.isNil(expiration) || (_.isString(expiration) && _.isEmpty(expiration))) {
+
                     // If the expiration parameter is not defined, get the latest license, ie. max valid days
+                    logger.log('verbose', 'As expiration is not defined, getting the latest license');
                     license = _.maxBy(licenses, 'nbValidDays');
+
                 } else if (_.isDate(expiration)) {
 
                     // If expiration parameter is a Date get the corresponding license, null if not found
+                    logger.log('verbose', 'As expiration is a date, getting the license by expiration date');
                     license = _.find(licenses, (item) => {
                         const expirationDate = item.expirationDate;
                         return moment(expiration, 'YYYY-MM-DD').isSame(expirationDate, 'day');
+
                     });
 
                 } else if (_.isFinite(expiration)) {
 
+                    logger.log('verbose', 'As expiration is a number, getting the license by remaining valid days');
                     // If expiration parameter is a finite number, get the corresponding license, ie. same valid days
                     license = _.find(licenses, {'nbValidDays': expiration});
+
                 }
 
 
@@ -287,16 +340,25 @@ module.exports = (licensePageURL) => {
                         licenseNotFoundError = new Error(`License expiring in ${expiration} days not found.`);
                     }
 
+                    // TODO handle error
+                    logger.warn('License not found', licenseNotFoundError);
                     reject(licenseNotFoundError);
 
                 } else {
 
                     // If license found, return the license
+                    logger.info('Providing the license', license);
                     resolve(license);
                 }
 
             }).catch((err) => {
+
+                logger.error(`Can't provide the license`);
+                logger.error('Something went wrong while getting the list of licenses');
+
+                // TODO handle error, reject with custom ProviderError
                 reject(err);
+
             });
         });
 
@@ -310,8 +372,11 @@ module.exports = (licensePageURL) => {
      */
     const getLatestLicense = () => {
         // Simply redirect to getLicense function with no parameter
+        logger.info('Getting the latest license');
         return getLicense();
     }
+
+    logger.log('verbose', 'Provider configured');
 
     // Export the public functions
     return {
