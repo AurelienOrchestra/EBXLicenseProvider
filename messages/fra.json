@@ -20,5 +20,11 @@
     },{
         "code": "BOT_CONV",
         "message": "Désolé, je ne peux tenir une discussion, je ne suis qu'un stupide bot qui fournit des licence EBX quand on m'en demande une"
+    },{
+        "code": "BOT_006",
+        "message": "Je n'ai pas réussi a récupérer la liste des licences, contacte le support ou essaie plus tard"
+    },{
+        "code": "BOT_007",
+        "message": "Malheureusement, je n'ai pas trouvé la licence souhaitée, essaie une autre"
     }
 ]

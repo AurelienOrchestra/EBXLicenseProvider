@@ -1,7 +1,7 @@
 [
     {
         "code": "BOT_ERR",
-        "message": "Sorry, something went wrong with the license provider, please contact the support or try later"
+        "message": "Sorry, something went wrong, please contact the support or try later"
     },{
         "code": "BOT_001",
         "message": "here is your EBX license"
@@ -20,5 +20,11 @@
     },{
         "code": "BOT_CONV",
         "message": "Sorry, I can't have a conversation, I'm just a stupid bot providing license if you ask one"
+    },{
+        "code": "BOT_006",
+        "message": "I was not able to get the list of licenses, try later or contact your support"
+    },{
+        "code": "BOT_007",
+        "message": "Unfortunately, I didn't found the expected license, try another one"
     }
 ]

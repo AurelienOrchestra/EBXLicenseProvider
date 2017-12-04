@@ -36,7 +36,7 @@ module.exports = (EBXLicensesProvider, port) => {
         logger.log('verbose', 'Requesting provider for licenses with getLicenses()');
 
         EBXLicensesProvider.getLicenses()
-            .then(licenses => {
+            .then((licenses) => {
 
                 logger.log('verbose', 'Provider returned requested licenses');
                 logger.log('debug', 'Licenses:', licenses);
@@ -45,9 +45,8 @@ module.exports = (EBXLicensesProvider, port) => {
                 res.json(licenses);
 
             })
-            .catch(err => {
+            .catch((err) => {
 
-                // TODO handle the error
                 botLogger.error('Provider return an error on getLicenses()');
                 botLogger.error(err);
 
@@ -65,7 +64,7 @@ module.exports = (EBXLicensesProvider, port) => {
         logger.log('verbose', 'Requesting provider for the latest license with getLatestLicense()');
 
         EBXLicensesProvider.getLatestLicense()
-            .then(license => {
+            .then((license) => {
 
                 logger.log('verbose', 'Provider returned the requested latest license');
                 logger.log('debug', 'Latest license:', license);
@@ -74,9 +73,8 @@ module.exports = (EBXLicensesProvider, port) => {
                 res.json(license);
 
             })
-            .catch(err => {
+            .catch((err) => {
 
-                // TODO handle the error
                 botLogger.error('Provider return an error on getLatestLicense()');
                 botLogger.error(err);
 
@@ -129,7 +127,6 @@ module.exports = (EBXLicensesProvider, port) => {
             })
             .catch((err) => {
 
-                // TODO handle the error
                 botLogger.error(`Provider return an error on getLicense(expiration)`, { expiration });
                 botLogger.error(err);
 

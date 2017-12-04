@@ -2,6 +2,8 @@
 const htmlparser = require('htmlparser2');
 const moment = require('moment');
 const _ = require('lodash');
+const ErrorsFactory = require('errors-factory');
+const errors = new ErrorsFactory(require('./errors.json'));
 
 // Get the logger
 const logger = require('winston').loggers.get('Provider');
@@ -34,7 +36,9 @@ class License {
      */
     constructor(key, date) {
 
-        // TODO check parameters
+        if(!_.isString(key) || !date.isValid()) {
+            throw errors.ERR_PROVIDER_003;
+        }
 
         /**
          * @type {String}
@@ -128,14 +132,14 @@ module.exports = (licensePageURL) => {
 
             logger.log('verbose', 'HTTP requesting the license page', { url : licensePageURL });
             // HTTP request of the page
-            request(licensePageURL).then(content => {
+            request(licensePageURL).then((content) => {
 
                 logger.log('verbose', 'Getting the content of the license page');
                 // Parse the content to get the licenses
                 const licenses = parse(content);
                 resolve(licenses);
 
-            }).catch(err => {
+            }).catch((err) => {
                 logger.error('Error raised when HTTP requesting the license page', { url : licensePageURL });
                 reject(err);
             });
@@ -181,10 +185,18 @@ module.exports = (licensePageURL) => {
                         key: key,
                         date: date.toDate()
                     });
-                    const license = new License(key, date);
-                    logger.log('verbose', 'License created', license);
 
-                    return license;
+                    let license = null;
+                    try {
+                        license = new License(key, date);
+                        logger.log('verbose', 'License created', license);
+                        return license;
+                    } catch (err) {
+                        if (!err.message.includes('ERR_PROVIDER_003')) {
+                            logger.error(errors.ERR_000);
+                        }
+                        logger.error(err);
+                    }
                 });
             }
         }, {
@@ -271,8 +283,10 @@ module.exports = (licensePageURL) => {
 
                     logger.error(`Can't provide the list of licenses`);
                     logger.error('Something went wrong while updating the cache');
-                    logger.error(err);
-                    reject(err);
+
+                    const error = errors.ERR_PROVIDER_001;
+                    logger.error(error);
+                    reject(error);
 
                 });
             }
@@ -329,19 +343,11 @@ module.exports = (licensePageURL) => {
                 if (_.isNil(license)) {
 
                     // If no license found, return an error
+                    const licenseNotFoundError = errors.ERR_PROVIDER_002;
+                    licenseNotFoundError.expiration = expiration;
 
-                    let licenseNotFoundError = new Error(`License not found with the expiration ${expiration}.`);
-
-                    if(_.isNil(expiration) || (_.isString(expiration) && _.isEmpty(expiration))) {
-                        licenseNotFoundError = new Error(`Latest license not found.`);
-                    } else if (_.isDate(expiration)) {
-                        licenseNotFoundError = new Error(`License expiring on ${expiration} not found.`);
-                    } else if (_.isFinite(expiration)) {
-                        licenseNotFoundError = new Error(`License expiring in ${expiration} days not found.`);
-                    }
-
-                    // TODO handle error
-                    logger.warn('License not found', licenseNotFoundError);
+                    logger.warn('License not found');
+                    logger.warn(licenseNotFoundError);
                     reject(licenseNotFoundError);
 
                 } else {
@@ -354,10 +360,14 @@ module.exports = (licensePageURL) => {
             }).catch((err) => {
 
                 logger.error(`Can't provide the license`);
-                logger.error('Something went wrong while getting the list of licenses');
 
-                // TODO handle error, reject with custom ProviderError
-                reject(err);
+                if (err && err.message.includes('ERR_PROVIDER_001')) {
+                    logger.error('Something went wrong while getting the list of licenses');
+                    reject(err);
+                } else {
+                    logger.error('Something unexpected went wrong');
+                    reject(errors.ERR_000);
+                }
 
             });
         });

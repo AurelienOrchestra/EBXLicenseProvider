@@ -1,6 +1,8 @@
 // Dependencies
 const _ = require('lodash');
 const args = require('yargs').argv;
+const ErrorsFactory = require('errors-factory');
+const errors = new ErrorsFactory(require('./errors.json'));
 
 // Getting debug and verbose argument from command line
 const debug = args.debug || false;
@@ -14,7 +16,7 @@ const logger = require('winston').loggers.get('App');
 // Get the mandatory license page url argument from command line
 const licensePageURL = args.url || process.env.LICENSE_PAGE_URL;
 if (licensePageURL == null) {
-    const err = new Error('The url of the license page is mandatory!');
+    const err = errors.ERR_APP_001;
     logger.error(err);
     throw err;
 }
@@ -23,7 +25,7 @@ logger.log('debug', `License page URL: ${licensePageURL}`);
 // Get the mandatory slackbot token argument from command line
 const slackBotToken = args.token || process.env.SLACKBOT_TOKEN;
 if (slackBotToken == null) {
-    const err = new Error('The token of the slackbot is mandatory!');
+    const err = errors.ERR_APP_002;
     logger.error(err);
     throw err;
 }

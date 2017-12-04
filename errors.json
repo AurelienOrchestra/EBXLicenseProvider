@@ -1,0 +1,21 @@
+[
+    {
+        "code": "ERR_000",
+        "message": "Something unexpected went wrong"
+    }, {
+        "code": "ERR_PROVIDER_001",
+        "message": "Something went wrong while getting the list of licenses"
+    }, {
+        "code": "ERR_PROVIDER_002",
+        "message": "License not found"
+    }, {
+        "code": "ERR_PROVIDER_003",
+        "message": "Illegal parameter for creating new License instance"
+    }, {
+        "code": "ERR_APP_001",
+        "message": "The url of the license page is mandatory!"
+    }, {
+        "code": "ERR_APP_002",
+        "message": "The token of the slackbot is mandatory!"
+    }
+]
