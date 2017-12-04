@@ -19,7 +19,7 @@ const messages = require('./messages');
  * @param {String} pretext Text to be added to the formatted license information.
  * @param {String} [language = 'eng'] The language of the formatted message.
  */
-const formatLicense = (license, pretext, language = 'eng') => {
+function formatLicense(license, pretext, language = 'eng') {
 
     botLogger.log('verbose', `Formatting the license to be returned through Slack`);
 
@@ -72,7 +72,7 @@ const formatLicense = (license, pretext, language = 'eng') => {
  * @param {Object} message the message object from Slack.
  * @return {?Date} The processed date, or null.
  */
-const extractDate = (message = {}) => {
+function extractDate(message = {}) {
 
     botLogger.log('verbose', 'Extracting date from message');
 
@@ -105,7 +105,7 @@ const extractDate = (message = {}) => {
  * @param {Object} message the message object from Slack.
  * @return {String} The language.
  */
-const detectLanguage = (message = {}) => {
+function detectLanguage(message = {}) {
 
     botLogger.log('verbose', 'Detecting language from message');
 
@@ -126,6 +126,23 @@ const detectLanguage = (message = {}) => {
     });
 
     return language;
+}
+
+function replyError(err, bot, message, language = 'eng') {
+
+    let repliedMessage = null;
+
+    if (err && err.message.includes('ERR_PROVIDER_001')) {
+        repliedMessage = messages('BOT_006', language);
+    } else if (err && err.message.includes('ERR_PROVIDER_002')) {
+        repliedMessage = messages('BOT_007', language);
+    } else {
+        repliedMessage = messages('BOT_ERR', language);
+    }
+
+    botLogger.log('verbose', 'Replying with an error message');
+    bot.reply(message, repliedMessage);
+
 }
 
 /**
@@ -201,12 +218,10 @@ module.exports = (EBXLicensesProvider, token) => {
 
         }).catch((err) => {
 
-            // TODO handle error
             botLogger.error('Provider return an error on getLicense(expiration)');
             botLogger.error(err);
 
-            botLogger.log('verbose', 'Replying with an error message');
-            bot.reply(message, messages('BOT_ERR', language));
+            replyError(err, bot, message, language);
 
         });
 
@@ -240,12 +255,10 @@ module.exports = (EBXLicensesProvider, token) => {
 
         }).catch((err) => {
 
-            // TODO handle error
             botLogger.error('Provider return an error on getLicense(expiration)');
             botLogger.error(err);
 
-            botLogger.log('verbose', 'Replying with an error message');
-            bot.reply(message, messages('BOT_ERR', language));
+            replyError(err, bot, message, language);
 
         });
 
@@ -279,12 +292,10 @@ module.exports = (EBXLicensesProvider, token) => {
 
         }).catch((err) => {
 
-            // TODO handle error
             botLogger.error('Provider return an error on getLicense(expiration)');
             botLogger.error(err);
 
-            botLogger.log('verbose', 'Replying with an error message');
-            bot.reply(message, messages('BOT_ERR', language));
+            replyError(err, bot, message, language);
 
         });
 
