@@ -4,10 +4,10 @@
         "message": "Sorry, something went wrong, please contact the support or try later"
     },{
         "code": "BOT_001",
-        "message": "here is your EBX license"
+        "message": "here is your EBX5 trial license"
     },{
         "code": "BOT_002",
-        "message": "you want an EBX license, here is one"
+        "message": "you want an EBX5 trial license, here is one"
     },{
         "code": "BOT_003",
         "message": "Key"
@@ -19,7 +19,7 @@
         "message": "Expiring in {0} days"
     },{
         "code": "BOT_CONV",
-        "message": "Sorry, I can't have a conversation, I'm just a stupid bot providing license if you ask one"
+        "message": "Sorry, I can't have a conversation, I'm just a stupid bot providing EBX5 trial licenses if you ask one"
     },{
         "code": "BOT_006",
         "message": "I was not able to get the list of licenses, try later or contact your support"
