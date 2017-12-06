@@ -1,14 +1,15 @@
+const path = require('path');
 const _ = require('lodash');
 const winston = require('winston');
 
-module.exports = (debug, verbose) => {
+module.exports = (logDir = './log', debug, verbose) => {
 
     const level = debug ? 'debug' : (verbose ? 'verbose' : 'info');
 
     // -------------------------------------------------------------------------
 
     const appLabel = 'App';
-    const appFilename = 'app';
+    const appFilename = path.join(logDir, `app.log`);
 
     winston.loggers.add(appLabel, {
         transports: [
@@ -23,7 +24,7 @@ module.exports = (debug, verbose) => {
             new (winston.transports.File)({
                 label: appLabel,
                 name: appLabel,
-                filename: `./log/${appFilename}.log`,
+                filename: appFilename,
                 level: level,
                 prettyPrint: true,
                 depth: 0,
@@ -35,7 +36,7 @@ module.exports = (debug, verbose) => {
     // -------------------------------------------------------------------------
 
     const providerLabel = 'Provider';
-    const providerFilename = 'provider';
+    const providerFilename = path.join(logDir, `provider.log`);
 
     winston.loggers.add(providerLabel, {
 
@@ -51,7 +52,7 @@ module.exports = (debug, verbose) => {
             new (winston.transports.File)({
                 label: providerLabel,
                 name: appLabel,
-                filename: `./log/${appFilename}.log`,
+                filename: appFilename,
                 level: level,
                 prettyPrint: true,
                 depth: 0,
@@ -60,7 +61,7 @@ module.exports = (debug, verbose) => {
             new (winston.transports.File)({
                 label: providerLabel,
                 name: providerLabel,
-                filename: `./log/${providerFilename}.log`,
+                filename: providerFilename,
                 level: level,
                 prettyPrint: true,
                 depth: 0,
@@ -72,7 +73,7 @@ module.exports = (debug, verbose) => {
     // -------------------------------------------------------------------------
 
     const restLabel = 'REST';
-    const restFilename = 'rest';
+    const restFilename = path.join(logDir, `rest.log`);
 
     winston.loggers.add(restLabel, {
 
@@ -88,7 +89,7 @@ module.exports = (debug, verbose) => {
             new (winston.transports.File)({
                 label: restLabel,
                 name: appLabel,
-                filename: `./log/${appFilename}.log`,
+                filename: appFilename,
                 level: level,
                 prettyPrint: true,
                 depth: 0,
@@ -97,7 +98,7 @@ module.exports = (debug, verbose) => {
             new (winston.transports.File)({
                 label: restLabel,
                 name: restLabel,
-                filename: `./log/${restFilename}.log`,
+                filename: restFilename,
                 level: level,
                 prettyPrint: true,
                 depth: 0,
@@ -109,7 +110,7 @@ module.exports = (debug, verbose) => {
     // -------------------------------------------------------------------------
 
     const botLabel = 'BOT';
-    const botFilename = 'bot';
+    const botFilename = path.join(logDir, `bot.log`);
 
     winston.loggers.add(botLabel, {
 
@@ -125,7 +126,7 @@ module.exports = (debug, verbose) => {
             new (winston.transports.File)({
                 label: botLabel,
                 name: appLabel,
-                filename: `./log/${appFilename}.log`,
+                filename: appFilename,
                 level: level,
                 prettyPrint: true,
                 depth: 0,
@@ -134,7 +135,7 @@ module.exports = (debug, verbose) => {
             new (winston.transports.File)({
                 label: botLabel,
                 name: botLabel,
-                filename: `./log/${botFilename}.log`,
+                filename: botFilename,
                 level: level,
                 prettyPrint: true,
                 depth: 0,
@@ -146,7 +147,7 @@ module.exports = (debug, verbose) => {
     // -------------------------------------------------------------------------
 
     const nlpLabel = 'NLP';
-    const nlpFilename = 'nlp';
+    const nlpFilename = path.join(logDir, `nlp.json`);
 
     winston.loggers.add(nlpLabel, {
 
@@ -162,7 +163,7 @@ module.exports = (debug, verbose) => {
             new (winston.transports.File)({
                 label: nlpLabel,
                 name: appLabel,
-                filename: `./log/${appFilename}.log`,
+                filename: appFilename,
                 level: level,
                 prettyPrint: true,
                 depth: 0,
@@ -171,7 +172,7 @@ module.exports = (debug, verbose) => {
             new (winston.transports.File)({
                 label: nlpLabel,
                 name: nlpLabel,
-                filename: `./log/${nlpFilename}.json`,
+                filename: nlpFilename,
                 level: level,
                 prettyPrint: true,
                 depth: 0,

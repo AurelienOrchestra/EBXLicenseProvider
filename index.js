@@ -1,4 +1,5 @@
 // Dependencies
+const path = require('path');
 const _ = require('lodash');
 const args = require('yargs').argv;
 const ErrorsFactory = require('errors-factory');
@@ -8,8 +9,11 @@ const errors = new ErrorsFactory(require('./errors.json'));
 const debug = args.debug || false;
 const verbose = args.verbose || false;
 
+// Getting the log directory from conmmand line
+const logDir = args.logDir || `./log`;
+
 // Set up loggers
-require('./logger')(debug, verbose);
+require('./logger')(logDir, debug, verbose);
 // Get the logger
 const logger = require('winston').loggers.get('App');
 
