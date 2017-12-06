@@ -38,6 +38,7 @@ function formatLicense(license, pretext, language = 'eng') {
     let formattedReply = {
         'attachments': [
             {
+                'fallback': license.key,
                 'pretext': pretext,
     			'color': '#262C72', // Blue color from Orchestra Networks
     			'fields': [
